@@ -1,0 +1,12 @@
+.DS_Store
+node_modules/
+__pycache__/
+data_raw/
+data_faers/
+data_processed/
+faers_ascii_2025q2/
+faers_ascii_2025q3/
+*.zip
+*.7z
+*.tar
+*.tar.gz
