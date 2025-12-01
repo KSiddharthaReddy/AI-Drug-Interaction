@@ -7,6 +7,7 @@ ML_PATH = os.path.abspath(os.path.join(BASE_DIR, "..", "ml"))
 if ML_PATH not in sys.path:
     sys.path.append(ML_PATH)
 
+from fastapi import Body
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
@@ -37,7 +38,7 @@ class RiskRequest(BaseModel):
 
 class RecommendRequest(BaseModel):
     drug_ids: List[str]
-    target_drug: str
+
 
 @app.get("/")
 def root():
@@ -53,8 +54,8 @@ def recommend(request: RecommendRequest):
     recs = recommend_alternatives(request.drug_ids, request.target_drug)
     return {"recommendations": recs}
 
-@app.get("/interaction_graph")
-def interaction_graph():
-    nodes = [{"id": row["drug_id"], "label": row["name"]} for _, row in drugs_df.iterrows()]
-    edges = [{"source": row["drug1_id"], "target": row["drug2_id"]} for _, row in interactions_df.iterrows()]
-    return {"nodes": nodes, "edges": edges}
+@app.post("/interaction_graph")
+def interaction_graph(
+    drug_ids: List[str] = Body(...)
+):
+    return build_graph(drug_ids)
